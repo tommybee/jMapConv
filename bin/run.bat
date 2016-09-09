@@ -1,0 +1,3 @@
+call setenv.bat
+java -cp . LauncherBootstrap -verbose -executablename mapconv mapconv 
+@rem pause ...

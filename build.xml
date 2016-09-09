@@ -1,0 +1,151 @@
+<project name="jMapConv" default="conv" basedir=".">
+    <description>
+        Gnuplot command manager
+    </description>
+  <!-- set global properties for this build -->
+  <property name="version" value="0.1"/>
+  <property name="manifest-version" value="0.1"/>
+  <property name="src" location="src"/>
+	<property name="test" location="ui_test"/>  
+  <property name="build" location="build"/>
+  <property name="test.build" location="test.build"/>
+  <property name="dist"  location="dist"/>
+	<property name="current.lib.dir" location="D:/Tommybee/Dev_src/Java/exec/jMapConv/bin/lib"/>
+	<property name="ext.lib.dir" location="D:/Tommybee/Dev_src/Java/exec/jMapConv/bin/extlib"/>
+	<property name="current.bin.dir" location="D:/Tommybee/Dev_src/Java/exec/jMapConv/bin"/>
+	
+	<property name="manifest" value="manifest"/>
+	
+	<property name="main.package" value="com/skcc"/>
+  <property name="codeconv.package" value="${main.package}/mapconv"/>
+  <property name="codeconv.name"  value="jCoordConv-0.6"/>
+  
+	<path id="compile.classpath">
+		<fileset dir="${current.lib.dir}">
+        <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${ext.lib.dir}">
+        <include name="**/*.jar"/>
+    </fileset>
+  </path>
+ 
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+    
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} option -source 1.4 -->
+    <javac srcdir="${src}" destdir="${build}" source="1.6" encoding="utf-8" debug="true">
+    	<classpath refid="compile.classpath"/>
+    </javac>
+       
+  </target>
+  
+  
+  <target name="dist" depends="compile"
+        description="generate the distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+    
+		 <delete file="${current.lib.dir}/${codeconv.name}.jar"/>
+
+    <jar destfile="${dist}/lib/${codeconv.name}.jar"
+         basedir="${build}"
+         manifest="${manifest}">
+       
+       <manifest>
+        <section name="${main.package}/">
+          <attribute name="Extension-name"
+                     value="com.tobee.codeconv"/>
+          <attribute name="Specification-Title"
+                     value="Gnu plot java interface"/>
+          <attribute name="Specification-Version"
+                     value="${version}"/>
+          <attribute name="Specification-Vendor"
+                     value="tommybee"/>
+          <attribute name="Implementation-Title"
+                     value="GnuPlot Commnad"/>
+          <attribute name="Implementation-Version"
+                     value="${manifest-version}"/>
+          <attribute name="Implementation-Vendor"
+                     value="tommybee"/>
+        </section>
+      </manifest>
+    </jar>
+ 
+    <copy todir="${current.lib.dir}">
+      <fileset dir="${dist}/lib">
+        <include name="${codeconv.name}.jar"/>
+      </fileset>
+    </copy>
+    
+    
+  </target>
+
+	<target name="conv" depends="dist"
+        description="generate the jni header" >
+  </target>
+	
+	<target name="test" depends="init"
+        description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} option -source 1.4 -->
+    <javac srcdir="${test}" destdir="${test.build}" source="1.6" debug="true">
+    	<classpath refid="compile.classpath"/>
+    </javac>
+       
+  </target>
+	
+	<target name="dist-test" depends="test"
+        description="generate the distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+    
+		 <delete file="${current.lib.dir}/${plot-view}.jar"/>
+
+    <jar destfile="${dist}/lib/${plot-view}.jar"
+         basedir="${test.build}"
+         manifest="${manifest}">
+       
+       <manifest>
+        <section name="${main.package}/">
+          <attribute name="Extension-name"
+                     value="com.tobee.ignuplot"/>
+          <attribute name="Specification-Title"
+                     value="Gnu plot java interface"/>
+          <attribute name="Specification-Version"
+                     value="${version}"/>
+          <attribute name="Specification-Vendor"
+                     value="tommybee"/>
+          <attribute name="Implementation-Title"
+                     value="GnuPlot Commnad"/>
+          <attribute name="Implementation-Version"
+                     value="${manifest-version}"/>
+          <attribute name="Implementation-Vendor"
+                     value="tommybee"/>
+        </section>
+      </manifest>
+    </jar>
+ 
+    <copy todir="${current.lib.dir}">
+      <fileset dir="${dist}/lib">
+        <include name="${plot-view}.jar"/>
+      </fileset>
+    </copy>
+    
+    
+  </target>
+	
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${test.build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
+
